@@ -1,0 +1,200 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Jan 30 09:25:36 2024
+
+@author: christo
+"""
+import pandas as pd
+
+df = pd.read_csv("data_02/country_data_index.csv")
+
+print(df)
+
+
+df2 = pd.read_csv("https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data")
+
+print(df2)
+
+column_names = ["sepal_length","sepal_width","petal_length","petal_width","class"]
+
+df2 = pd.read_csv("https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data",header = None, names=(column_names))
+
+print(df2)
+
+df3 = pd.read_csv("data_02/Geospatial Data.txt",sep=";")
+
+print(df3)
+
+
+df4 = pd.read_excel("data_02/residentdoctors.xlsx")
+
+print(df4)
+
+df5 = pd.read_json("data_02/student_data.json")
+
+print(df5)
+
+df6 = pd.read_csv("data_02/country_data_index.csv")
+
+print(df6)
+
+df6 = pd.read_csv("data_02/country_data_index.csv",index_col=0)
+
+print(df6)
+
+#df7 = pd.read_csv("data_02/insurance_data.csv")
+
+df7 = pd.read_csv("data_02/insurance_data.csv",skiprows=(5))
+
+print(df7)
+
+df8 = pd.read_csv("data_02/patient_data.csv")
+
+print(df8)
+
+column_names2= ["duration","pulse","max_pulse","calories"]
+
+df8 = pd.read_csv("data_02/patient_data.csv",header=None,names=(column_names2))
+print(df8)
+
+#df9 = pd.read_csv("data_02/Geospatial Data.txt")
+
+df9 = pd.read_csv("data_02/Geospatial Data.txt",sep=";")
+
+print(df9)
+
+# Step 1: Extract the lower end of the age range (digits only)
+
+df4['LOWER_AGE'] = df4['AGEDIST'].str.extract('(\d+)-')
+
+# Step 2: Convert the new column to float
+
+df4["LOWER_AGE"] = df4["LOWER_AGE"].astype(int)
+print(df4)
+
+df10 = pd.read_csv("data_02/time_series_data.csv")
+print(df10)
+df10 = pd.read_csv("data_02/time_series_data.csv",index_col=(0))
+print(df10)
+
+# Convert the 'Date' column to datetime
+
+df10["Date"] = pd.to_datetime(df10["Date"])
+print(df10)
+df10["Date"] = pd.to_datetime(df10["Date"],format="%d,%m,%Y")
+print(df10)
+
+# Split the 'Date' column into separate columns for year, month, and day
+
+
+df10["Day"] = df10["Date"].dt.day
+df10["Month"] = df10["Date"].dt.month
+df10["Year"] = df10["Date"].dt.year
+print(df10)
+
+
+ds = pd.read_csv("data_02/patient_data_dates.csv")
+
+# Allows you to see all rows
+
+pd.set_option("display.max_rows", None)
+print(ds)
+
+ds.drop(["Index"],inplace=True,axis=1)
+print(ds)
+
+x = ds["Calories"].mean()
+ds["Calories"].fillna(x,inplace=True)
+ds["Date"] = pd.to_datetime(ds["Date"])
+ds.dropna(inplace=True)
+ds = ds.reset_index(drop=True)
+
+ds.loc[7,"Duration"] = 45
+ds.drop_duplicates(inplace=True)
+print(ds)
+
+
+
+grouped = df2.groupby('class')
+
+# Calculate mean, sum, and count for the squared values
+df2["sepal_length-sq"] = df2["sepal_length"]**2
+
+mean_squared_values = grouped["sepal_length-sq"].mean()
+sum_squared_values = grouped["sepal_length-sq"].sum()
+count_squared_values = grouped["sepal_length-sq"].count()
+
+# Display the results
+print("Mean of Sepal Length Squared:")
+print(mean_squared_values)
+print("\nSum of Sepal Length Squared:")
+print(sum_squared_values)
+print("\nCount of Sepal Length Squared:")
+print(count_squared_values)
+
+
+
+# Read the CSV files into dataframes
+
+
+
+dx1 = pd.read_csv("data_02/person_split1.csv")
+dx2 = pd.read_csv("data_02/person_split2.csv")
+
+# Concatenate the dataframes
+
+dx3 = pd.concat([dx1,dx2],ignore_index=True)
+print(dx1)
+print(dx2)
+print(dx3)
+
+
+dx4 = pd.read_csv("data_02/person_education.csv")
+dx5 = pd.read_csv("data_02/person_work.csv")
+
+
+# inner join
+
+dx_merge = pd.merge(dx4,dx5,on="id")
+
+print(dx_merge)
+
+dx_merge = pd.merge(dx4,dx5,on="id",how="outer")
+print(dx_merge)
+
+
+# Filtering data
+
+print(df[df["Age"]>30])
+
+
+# Filter data for females (class == 'Iris-versicolor')
+
+
+iris_versicolor = df2[df2["class"] == 'iris_versicolor']
+
+print(iris_versicolor)
+
+
+# Calculate the average iris_versicolor_sep_length
+
+
+avg_iris_versicolor_sep_length = iris_versicolor["sepal_length"].mean
+
+print(avg_iris_versicolor_sep_length)
+
+df2["class"] = df2["class"].str.replace("Iris-", "")
+
+print(df2)
+
+
+df2["sepal_length_sq"] = df2["sepal_length"].apply(lambda x: x**2)
+print(df2)
+
+
+df2.to_csv("data_02/output/iris_data_cleaned.csv", index=False)
+
+df2.to_excel("data_02/output/iris_data_cleaned.xlsx", index=False, sheet_name='Sheet1')
+
+df2.to_json("data_02/output/iris_data_cleaned.json", orient='records')
